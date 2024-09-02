@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS histories (
     visited_from  VARCHAR(255) NOT NULL,
     visited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO visitors (mail) values ('foo@example.com');
+INSERT INTO visitors (mail) values ('bar@example.com');
+
+INSERT INTO histories (visitor_id, visited_from) values (1, 'http://example.com');
+INSERT INTO histories (visitor_id, visited_from) values (2, 'http://example.com');
