@@ -49,3 +49,17 @@ func (hr *HistoryRepository) Fetch(ctx context.Context, num int) (res []domain.H
 	}
 	return res, nil
 }
+
+func (hr *HistoryRepository) Store(ctx context.Context, history *domain.History) (err error) {
+	query := `INSERT INTO histories (visitor_id, visited_from) VALUES ($1, $2)`
+	stmt, err := hr.Conn.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.ExecContext(ctx, history.Visitor.ID, history.VisitedFrom)
+	if err != nil {
+		return err
+	}
+
+	return
+}

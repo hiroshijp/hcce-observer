@@ -5,15 +5,17 @@ import (
 	"log"
 
 	"github.com/hiroshijp/try-clean-arch/domain"
-	"golang.org/x/sync/errgroup"
 )
 
 type HistoryRepository interface {
 	Fetch(ctx context.Context, num int) (res []domain.History, err error)
+	Store(ctx context.Context, history *domain.History) error
 }
 
 type VisitorRepository interface {
 	GetByID(ctx context.Context, id int) (res domain.Visitor, err error)
+	GetByMail(ctx context.Context, mail string) (res domain.Visitor, err error)
+	Store(ctx context.Context, visitor *domain.Visitor) error
 }
 
 type HistoryUsecase struct {
@@ -42,60 +44,35 @@ func (hu *HistoryUsecase) Fetch(ctx context.Context, num int) (res []domain.Hist
 		}
 		res[i].Visitor = visitor
 	}
-
-	// res, err = hu.fillVisitorDetails(ctx, res)
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return nil, err
-	// }
-
 	return
 }
 
-func (hu *HistoryUsecase) fillVisitorDetails(ctx context.Context, data []domain.History) ([]domain.History, error) {
-	g, ctx := errgroup.WithContext(ctx)
-	mapVisitors := map[int]domain.Visitor{}
+func (hu *HistoryUsecase) Store(ctx context.Context, history *domain.History) (err error) {
+	// visitor := history.Visitor
+	// err = hu.storeVisitorIfNotExist(ctx, &visitor)
+	// if err != nil {
+	// 	return err
+	// }
+	// history.Visitor = visitor
+	// return hu.historyRepo.Store(ctx, history)
 
-	for _, history := range data {
-		mapVisitors[history.Visitor.ID] = domain.Visitor{}
-	}
-
-	chanVisitors := make(chan domain.Visitor)
-	for visitorID := range mapVisitors {
-		visitorID := visitorID
-		g.Go(func() error {
-			res, err := hu.visitorRepo.GetByID(ctx, visitorID)
-			if err != nil {
-				return err
-			}
-			chanVisitors <- res
-			return nil
-		})
-	}
-
-	go func() {
-		defer close(chanVisitors)
-		err := g.Wait()
+	visitor, _ := hu.visitorRepo.GetByMail(ctx, history.Visitor.Mail)
+	log.Println(visitor)
+	if visitor == (domain.Visitor{}) {
+		err = hu.visitorRepo.Store(ctx, &visitor)
+		log.Println(visitor)
 		if err != nil {
-			log.Println(err)
-			return
-		}
-	}()
-
-	for visitor := range chanVisitors {
-		if visitor != (domain.Visitor{}) {
-			mapVisitors[visitor.ID] = visitor
+			return err
 		}
 	}
-
-	if err := g.Wait(); err != nil {
-		return nil, err
-	}
-
-	for i, item := range data {
-		if visitor, ok := mapVisitors[item.Visitor.ID]; ok {
-			data[i].Visitor = visitor
-		}
-	}
-	return data, nil
+	history.Visitor = visitor
+	return hu.historyRepo.Store(ctx, history)
 }
+
+// func (hu *HistoryUsecase) storeVisitorIfNotExist(ctx context.Context, visitor *domain.Visitor) error {
+// 	existedVisitor, _ := hu.visitorRepo.GetByMail(ctx, visitor.Mail)
+// 	if existedVisitor != (domain.Visitor{}) {
+// 		return nil
+// 	}
+// 	return hu.visitorRepo.Store(ctx, visitor)
+// }
