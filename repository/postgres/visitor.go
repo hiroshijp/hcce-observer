@@ -13,28 +13,27 @@ type VisitorRepository struct {
 }
 
 func NewVisitorRepository(conn *sql.DB) *VisitorRepository {
-	return &VisitorRepository{conn}
+	return &VisitorRepository{
+		Conn: conn,
+	}
 }
 
 func (hr *VisitorRepository) GetByID(ctx context.Context, id int) (res domain.Visitor, err error) {
-	row, err := hr.Conn.QueryContext(ctx, `SELECT * FROM visitors WHERE id = $1`, id)
+	query := `SELECT id, mail FROM visitors WHERE id=$1`
+	return hr.getOne(ctx, query, id)
+}
+
+func (vr *VisitorRepository) getOne(ctx context.Context, query string, args ...interface{}) (res domain.Visitor, err error) {
+	stmt, err := vr.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		log.Println(err)
 		return domain.Visitor{}, err
 	}
-
-	defer func() {
-		err = row.Close()
-		if err != nil {
-			log.Println(err)
-		}
-	}()
-
+	row := stmt.QueryRowContext(ctx, args...)
 	res = domain.Visitor{}
 	err = row.Scan(
 		&res.ID,
 		&res.Mail,
 	)
-
-	return res, nil
+	return
 }

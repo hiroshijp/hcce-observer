@@ -59,11 +59,11 @@ func main() {
 	visitorRepo := postgresRepo.NewVisitorRepository(dbConn)
 
 	// prepare service
-	historyService := usecase.NewHistoryUsecase(historyRepo, visitorRepo)
+	historyUsecase := usecase.NewHistoryUsecase(historyRepo, visitorRepo)
 
 	// prepare handler
 	handler.NewMiddleware(e)
-	handler.NewHistoryHandler(e, historyService)
+	handler.NewHistoryHandler(e, historyUsecase)
 
 	// start server
 	address := os.Getenv("SERVER_ADDRESS")
