@@ -12,6 +12,7 @@ import (
 type HistoryUsecase interface {
 	Fetch(ctx context.Context, num int) (res []domain.History, err error)
 	Store(ctx context.Context, history *domain.History) (err error)
+	FetchWithTx(ctx context.Context, num int) (res []domain.History, err error)
 }
 
 type HistoryHandler struct {
@@ -24,6 +25,7 @@ func NewHistoryHandler(e *echo.Echo, hu HistoryUsecase) {
 	}
 	e.GET("/history", handler.Fetch)
 	e.POST("/history", handler.Store)
+	e.GET("/history/tx", handler.FetchWithTx)
 
 }
 
@@ -56,4 +58,19 @@ func (h *HistoryHandler) Store(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, history)
+}
+
+func (h *HistoryHandler) FetchWithTx(c echo.Context) error {
+	numS := c.QueryParam("num")
+	num, err := strconv.Atoi(numS)
+	if err != nil {
+		num = 10
+	}
+
+	ctx := c.Request().Context()
+	data, err := h.historyUsecase.FetchWithTx(ctx, num)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, data)
 }

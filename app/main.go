@@ -55,11 +55,12 @@ func main() {
 	e := echo.New()
 
 	// prepare repositry
+	txRepo := postgresRepo.NewTxRepository(dbConn)
 	historyRepo := postgresRepo.NewHistoryRepository(dbConn)
 	visitorRepo := postgresRepo.NewVisitorRepository(dbConn)
 
 	// prepare service
-	historyUsecase := usecase.NewHistoryUsecase(historyRepo, visitorRepo)
+	historyUsecase := usecase.NewHistoryUsecase(txRepo, historyRepo, visitorRepo)
 
 	// prepare handler
 	handler.NewMiddleware(e)

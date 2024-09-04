@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS histories (
     id serial PRIMARY KEY,
     visitor_id INT REFERENCES visitors(id),
     visited_from  VARCHAR(255) NOT NULL,
-    visited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    visited_at TIMESTAMP 
 );
 
 INSERT INTO visitors (mail) values ('foo@example.com');

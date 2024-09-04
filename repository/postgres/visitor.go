@@ -39,17 +39,15 @@ func (vr *VisitorRepository) getOne(ctx context.Context, query string, args ...i
 }
 
 func (vr *VisitorRepository) Store(ctx context.Context, visitor *domain.Visitor) (err error) {
-	query := `INSERT INTO visitors (mail) VALUES ($1)`
+	query := `INSERT INTO visitors (mail) VALUES ($1) RETURNING id`
 	stmt, err := vr.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return
 	}
-	res, err := stmt.ExecContext(ctx, visitor.Mail)
+	err = stmt.QueryRow(visitor.Mail).Scan(&visitor.ID)
 	if err != nil {
 		return
 	}
-	lastID, _ := res.LastInsertId()
-	visitor.ID = int(lastID)
 	return
 }
 

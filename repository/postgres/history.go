@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"time"
 
 	"github.com/hiroshijp/try-clean-arch/domain"
 )
@@ -51,15 +52,15 @@ func (hr *HistoryRepository) Fetch(ctx context.Context, num int) (res []domain.H
 }
 
 func (hr *HistoryRepository) Store(ctx context.Context, history *domain.History) (err error) {
-	query := `INSERT INTO histories (visitor_id, visited_from) VALUES ($1, $2)`
+	query := `INSERT INTO histories (visitor_id, visited_from, visited_at) VALUES ($1, $2, $3) RETURNING id`
 	stmt, err := hr.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.ExecContext(ctx, history.Visitor.ID, history.VisitedFrom)
+	history.VisitedAt = time.Now()
+	err = stmt.QueryRow(history.Visitor.ID, history.VisitedFrom, history.VisitedAt).Scan(&history.ID)
 	if err != nil {
 		return err
 	}
-
 	return
 }
