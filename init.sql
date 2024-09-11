@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS histories (
     id serial PRIMARY KEY,
     visitor_id INT REFERENCES visitors(id),
     visited_from  VARCHAR(255) NOT NULL,
-    visited_at TIMESTAMP 
+    visited_at TIMESTAMP  
 );
 
 INSERT INTO visitors (mail) values ('foo@example.com');
 INSERT INTO visitors (mail) values ('bar@example.com');
 
-INSERT INTO histories (visitor_id, visited_from) values (1, 'http://example.com');
-INSERT INTO histories (visitor_id, visited_from) values (2, 'http://example.com');
+INSERT INTO histories (visitor_id, visited_from, visited_at) values (1, 'http://example.com', NOW());
+INSERT INTO histories (visitor_id, visited_from, visited_at) values (2, 'http://example.com', NOW());

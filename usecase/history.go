@@ -53,18 +53,15 @@ func (hu *HistoryUsecase) Fetch(ctx context.Context, num int) (res []domain.Hist
 }
 
 func (hu *HistoryUsecase) Store(ctx context.Context, history *domain.History) (err error) {
-	var visitor domain.Visitor
-	visitor.Mail = history.Visitor.Mail
 	existedVisitor, _ := hu.visitorRepo.GetByMail(ctx, history.Visitor.Mail)
 	if existedVisitor == (domain.Visitor{}) {
-		err = hu.visitorRepo.Store(ctx, &visitor)
+		existedVisitor.Mail = history.Visitor.Mail
+		err = hu.visitorRepo.Store(ctx, &existedVisitor)
 		if err != nil {
 			return err
 		}
-		history.Visitor = visitor
-	} else {
-		history.Visitor = existedVisitor
 	}
+	history.Visitor = existedVisitor
 	return hu.historyRepo.Store(ctx, history)
 }
 
