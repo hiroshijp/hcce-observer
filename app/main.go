@@ -59,6 +59,11 @@ func main() {
 	historyRepo := postgresRepo.NewHistoryRepository(dbConn)
 	visitorRepo := postgresRepo.NewVisitorRepository(dbConn)
 
+	// prepare auth
+	clientID := os.Getenv("CLIENT_ID")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	handler.NewAuthHandler(e, clientID, clientSecret)
+
 	// prepare service
 	historyUsecase := usecase.NewHistoryUsecase(txRepo, historyRepo, visitorRepo)
 
