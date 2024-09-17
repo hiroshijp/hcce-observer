@@ -70,6 +70,7 @@ func main() {
 	// prepare handler
 	handler.NewMiddleware(e)
 	handler.NewHistoryHandler(e, historyUsecase)
+	handler.NewUserHandler(e)
 
 	// start server
 	address := os.Getenv("SERVER_ADDRESS")
