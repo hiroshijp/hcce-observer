@@ -12,8 +12,13 @@ CREATE TABLE IF NOT EXISTS histories (
     visited_at TIMESTAMP  
 );
 
-INSERT INTO visitors (mail) values ('foo@example.com');
-INSERT INTO visitors (mail) values ('bar@example.com');
+CREATE TABLE IF NOT EXISTS users (
+    id serial PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN NOT NULL
+);
 
-INSERT INTO histories (visitor_id, visited_from, visited_at) values (1, 'http://example.com', NOW());
-INSERT INTO histories (visitor_id, visited_from, visited_at) values (2, 'http://example.com', NOW());
+--- Insert some data
+INSERT INTO visitors (mail) values ('test@example.com');
+INSERT INTO histories (visitor_id, visited_from, visited_at) values (1,'http://example.com', NOW());

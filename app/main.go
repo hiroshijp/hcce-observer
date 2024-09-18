@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/hiroshijp/try-clean-arch/handler"
+	"github.com/hiroshijp/try-clean-arch/handler/middleware"
+	"github.com/hiroshijp/try-clean-arch/handler/public"
 	postgresRepo "github.com/hiroshijp/try-clean-arch/repository/postgres"
 	"github.com/hiroshijp/try-clean-arch/usecase"
 
@@ -58,19 +60,20 @@ func main() {
 	txRepo := postgresRepo.NewTxRepository(dbConn)
 	historyRepo := postgresRepo.NewHistoryRepository(dbConn)
 	visitorRepo := postgresRepo.NewVisitorRepository(dbConn)
+	userRepo := postgresRepo.NewUserRepository(dbConn)
 
-	// prepare auth
-	clientID := os.Getenv("CLIENT_ID")
-	clientSecret := os.Getenv("CLIENT_SECRET")
-	handler.NewAuthHandler(e, clientID, clientSecret)
-
-	// prepare service
+	// prepare usecase
 	historyUsecase := usecase.NewHistoryUsecase(txRepo, historyRepo, visitorRepo)
+	userUsecase := usecase.NewUserUsecase(userRepo)
 
-	// prepare handler
-	handler.NewMiddleware(e)
-	handler.NewHistoryHandler(e, historyUsecase)
-	handler.NewUserHandler(e)
+	// prepare middleware and handler
+	middleware.NewCORSMiddleware(e, os.Getenv("ALLOWED_ORIGIN"))
+	public.NewVisitedHandler(e, historyUsecase)
+	public.NewSigninHandler(e, userUsecase)
+
+	api := e.Group("/api")
+	middleware.NewJWTMiddleware(api)
+	handler.NewHistoryHandler(api, historyUsecase)
 
 	// start server
 	address := os.Getenv("SERVER_ADDRESS")

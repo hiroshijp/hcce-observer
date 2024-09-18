@@ -19,7 +19,7 @@ type HistoryHandler struct {
 	historyUsecase HistoryUsecase
 }
 
-func NewHistoryHandler(e *echo.Echo, hu HistoryUsecase) {
+func NewHistoryHandler(e *echo.Group, hu HistoryUsecase) {
 	handler := &HistoryHandler{
 		historyUsecase: hu,
 	}
