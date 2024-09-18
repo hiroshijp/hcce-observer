@@ -12,7 +12,6 @@ import (
 	postgresRepo "github.com/hiroshijp/try-clean-arch/repository/postgres"
 	"github.com/hiroshijp/try-clean-arch/usecase"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
 )
@@ -21,14 +20,6 @@ import (
 const (
 	defaultAddress = ":8080"
 )
-
-// set env
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
 
 func main() {
 	//  prepare database source name

@@ -5,6 +5,15 @@ services:
     volumes:
       - .:/code
     working_dir: /code
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASS: postgres
+      DATABASE_NAME: app
+      ALLOWED_ORIGIN: https://yukizemi.online
+      ADMIN_NAME: hiroshijp
+      ADMIN_PASS: password
     ports:
       - 8080:8080
     tty: true
