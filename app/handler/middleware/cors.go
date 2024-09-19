@@ -7,7 +7,7 @@ import (
 
 func NewCORSMiddleware(e *echo.Echo, allowedOrigin string) {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{allowedOrigin},
+		AllowOrigins: []string{allowedOrigin, "https://hubs.local:4000"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{echo.GET, echo.POST, echo.OPTIONS},
 	}))
