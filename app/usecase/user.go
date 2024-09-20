@@ -9,7 +9,7 @@ import (
 )
 
 type UserRepository interface {
-	Fetch(ctx context.Context) (res []domain.User, err error)
+	FetchByName(ctx context.Context) (res domain.User, err error)
 	Store(ctx context.Context, user *domain.User) (err error)
 }
 
@@ -32,10 +32,10 @@ func (uu *UserUsecase) Store(ctx context.Context, user *domain.User) (err error)
 }
 
 func (uu *UserUsecase) Signin(ctx context.Context, name string, password string) (err error) {
-	if os.Getenv("ADMIN_NAME") != name || os.Getenv("ADMIN_PASS") != password {
+	user, err := uu.userRepo.FetchByName(ctx)
+	if user.name != name || user.password != password {
 		err = errors.New("user not found")
-		return err
+		return 
 	}
-
 	return nil
 }

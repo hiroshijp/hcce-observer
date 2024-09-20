@@ -3,7 +3,7 @@ services:
   app:
     depends_on:
       - db
-    image: superhirotakashima/hcce-observer:latest
+    image: superhirotakashima/hcce-observer:1.0.0
     working_dir: /app
     environment:
       DATABASE_HOST: db

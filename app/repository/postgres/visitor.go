@@ -26,7 +26,6 @@ func (vr *VisitorRepository) GetByID(ctx context.Context, id int) (res domain.Vi
 func (vr *VisitorRepository) getOne(ctx context.Context, query string, args ...interface{}) (res domain.Visitor, err error) {
 	stmt, err := vr.Conn.PrepareContext(ctx, query)
 	if err != nil {
-		log.Println(err)
 		return domain.Visitor{}, err
 	}
 	row := stmt.QueryRowContext(ctx, args...)
