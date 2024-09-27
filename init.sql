@@ -22,3 +22,4 @@ CREATE TABLE IF NOT EXISTS users (
 --- Insert some data
 INSERT INTO visitors (mail) values ('test@example.com');
 INSERT INTO histories (visitor_id, visited_from, visited_at) values (1,'http://example.com', NOW());
+INSERT INTO users (name, password, is_admin) values ('hiroshijp', 'password', true);

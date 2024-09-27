@@ -3,13 +3,12 @@ package usecase
 import (
 	"context"
 	"errors"
-	"os"
 
 	"github.com/hiroshijp/try-clean-arch/domain"
 )
 
 type UserRepository interface {
-	FetchByName(ctx context.Context) (res domain.User, err error)
+	FetchByName(ctx context.Context, name string) (res domain.User, err error)
 	Store(ctx context.Context, user *domain.User) (err error)
 }
 
@@ -32,10 +31,14 @@ func (uu *UserUsecase) Store(ctx context.Context, user *domain.User) (err error)
 }
 
 func (uu *UserUsecase) Signin(ctx context.Context, name string, password string) (err error) {
-	user, err := uu.userRepo.FetchByName(ctx)
-	if user.name != name || user.password != password {
-		err = errors.New("user not found")
-		return 
+	user, err := uu.userRepo.FetchByName(ctx, name)
+	if err != nil {
+		return err
+	}
+
+	if user.Password != password {
+		err = errors.New("password is not correct")
+		return err
 	}
 	return nil
 }

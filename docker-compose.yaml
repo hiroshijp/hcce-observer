@@ -3,8 +3,10 @@ services:
   app:
     depends_on:
       - db
-    image: superhirotakashima/hcce-observer:1.0.0
-    working_dir: /app
+    image: golang:1.21.4
+    volumes: 
+      - .:/code
+    working_dir: /code
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432

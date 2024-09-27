@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"log"
 
 	"github.com/hiroshijp/try-clean-arch/domain"
 )

@@ -2,6 +2,7 @@ package public
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,6 +32,7 @@ func (h *SigninHandler) Signin(c echo.Context) error {
 
 	ctx := c.Request().Context()
 	if err := h.userUsecase.Signin(ctx, name, password); err != nil {
+		fmt.Println(err)
 		return c.String(http.StatusUnauthorized, "user not found\n")
 	}
 	return c.String(http.StatusOK, "signin\n")
