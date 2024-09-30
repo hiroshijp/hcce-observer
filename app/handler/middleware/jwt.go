@@ -1,14 +1,37 @@
 package middleware
 
-import "github.com/labstack/echo/v4"
+import (
+	"time"
 
-func NewJWTMiddleware(e *echo.Group) {
-	e.Use(JWT)
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+)
+
+type jwtCustomClaims struct {
+	Name string `json:"name"`
+	jwt.RegisteredClaims
 }
 
-func JWT(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		c.Response().Header().Set("auth", "jwt")
-		return next(c)
+var signingKey = []byte("secret_for_dev")
+
+func NewJWTMiddleware(e *echo.Group) {
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return &jwtCustomClaims{}
+		},
+		SigningKey: signingKey,
 	}
+	e.Use(echojwt.WithConfig(config))
+}
+
+func CreateToken(name string) (string, error) {
+	claims := &jwtCustomClaims{
+		name,
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(signingKey)
 }
