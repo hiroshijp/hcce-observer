@@ -18,7 +18,7 @@ func NewHistoryRepository(conn *sql.DB) *HistoryRepository {
 }
 
 func (hr *HistoryRepository) Fetch(ctx context.Context, num int) (res []domain.History, err error) {
-	rows, err := hr.Conn.QueryContext(ctx, `SELECT * FROM histories LIMIT $1`, num)
+	rows, err := hr.Conn.QueryContext(ctx, `SELECT * FROM histories ORDER BY visited_at DESC LIMIT $1`, num)
 	if err != nil {
 		log.Println(err)
 		return nil, err
