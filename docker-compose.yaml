@@ -10,12 +10,13 @@ services:
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
-      DATABASE_USER: postgres
-      DATABASE_PASS: postgres
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASS: ${POSTGRES_PASSWORD}
       DATABASE_NAME: app
-      ALLOWED_ORIGIN: https://yukizemi.online
-      ADMIN_NAME: hiroshijp
-      ADMIN_PASS: password
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_PASS: ${ADMIN_PASS}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
+      
     ports:
       - 8080:8080
     tty: true
@@ -24,8 +25,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: app
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
