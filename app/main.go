@@ -47,6 +47,11 @@ func main() {
 	// prepare echo
 	e := echo.New()
 
+	// health check　one two
+	e.GET("/health", func(c echo.Context) error {
+		return c.String(200, "OK \n")
+	})
+
 	// prepare repositry
 	txRepo := postgresRepo.NewTxRepository(dbConn)
 	historyRepo := postgresRepo.NewHistoryRepository(dbConn)
