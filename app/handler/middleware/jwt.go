@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -13,7 +14,7 @@ type jwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-var signingKey = []byte("secret_for_dev")
+var signingKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
 
 func NewJWTMiddleware(e *echo.Group) {
 	config := echojwt.Config{

@@ -16,6 +16,7 @@ services:
       ADMIN_NAME: ${ADMIN_NAME}
       ADMIN_PASS: ${ADMIN_PASS}
       ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY}
       
     ports:
       - 8080:8080
