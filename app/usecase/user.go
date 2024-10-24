@@ -26,7 +26,12 @@ func (uu *UserUsecase) Fetch(ctx context.Context) (res []domain.User, err error)
 	return
 }
 
-func (uu *UserUsecase) Store(ctx context.Context, user *domain.User) (err error) {
+func (uu *UserUsecase) Create(ctx context.Context, user *domain.User) (err error) {
+	if user.Admin == true {
+		err = errors.New("admin can not create admin")
+		return
+	}
+	err = uu.userRepo.Store(ctx, user)
 	return
 }
 

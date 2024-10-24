@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/hiroshijp/try-clean-arch/domain"
 	"github.com/hiroshijp/try-clean-arch/handler"
 	"github.com/hiroshijp/try-clean-arch/handler/middleware"
 	"github.com/hiroshijp/try-clean-arch/handler/public"
@@ -70,6 +72,27 @@ func main() {
 	api := e.Group("/api")
 	middleware.NewJWTMiddleware(api)
 	handler.NewHistoryHandler(api, historyUsecase)
+	handler.NewUserHandler(api, userUsecase)
+
+	// prepare admin
+	adminName := os.Getenv("ADMIN_NAME")
+	if adminName == "" {
+		log.Fatal("ADMIN_NAME is not set")
+	}
+	adminPass := os.Getenv("ADMIN_PASS")
+	if adminPass == "" {
+		log.Fatal("ADMIN_PASS is not set")
+	}
+	_ = userRepo.Delete(context.TODO(), adminName)
+	admin := &domain.User{
+		Name:     adminName,
+		Password: adminPass,
+		Admin:    true,
+	}
+	err = userRepo.Store(context.TODO(), admin)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// start server
 	address := os.Getenv("SERVER_ADDRESS")

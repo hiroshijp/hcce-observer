@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/hiroshijp/try-clean-arch/handler/middleware"
 
@@ -37,7 +38,12 @@ func (h *SigninHandler) Signin(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "failed to signin")
 	}
 
-	t, err := middleware.CreateToken(name)
+	isAdmin := false
+	if name == os.Getenv("ADMIN_NAME") && password == os.Getenv("ADMIN_PASS") {
+		isAdmin = true
+	}
+
+	t, err := middleware.CreateToken(name, isAdmin)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "failed to create token")
 	}

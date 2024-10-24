@@ -9,8 +9,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type jwtCustomClaims struct {
-	Name string `json:"name"`
+type JwtCustomClaims struct {
+	Name  string `json:"name"`
+	Admin bool   `json:"admin"`
 	jwt.RegisteredClaims
 }
 
@@ -19,16 +20,17 @@ var signingKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
 func NewJWTMiddleware(e *echo.Group) {
 	config := echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return &jwtCustomClaims{}
+			return &JwtCustomClaims{}
 		},
 		SigningKey: signingKey,
 	}
 	e.Use(echojwt.WithConfig(config))
 }
 
-func CreateToken(name string) (string, error) {
-	claims := &jwtCustomClaims{
+func CreateToken(name string, isAdmin bool) (string, error) {
+	claims := &JwtCustomClaims{
 		name,
+		isAdmin,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
 		},
