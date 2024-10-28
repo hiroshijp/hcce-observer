@@ -1,4 +1,4 @@
-module github.com/hiroshijp/try-clean-arch
+module github.com/hiroshijp/hcce-observer
 
 go 1.21.4
 

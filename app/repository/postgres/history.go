@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/hiroshijp/try-clean-arch/domain"
+	"github.com/hiroshijp/hcce-observer/domain"
 )
 
 type HistoryRepository struct {

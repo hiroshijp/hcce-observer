@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/hiroshijp/try-clean-arch/handler/middleware"
+	"github.com/hiroshijp/hcce-observer/handler/middleware"
 
 	"github.com/labstack/echo/v4"
 )

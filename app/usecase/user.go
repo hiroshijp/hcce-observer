@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/hiroshijp/try-clean-arch/domain"
+	"github.com/hiroshijp/hcce-observer/domain"
 )
 
 type UserRepository interface {

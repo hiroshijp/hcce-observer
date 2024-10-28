@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/hiroshijp/try-clean-arch/domain"
+	"github.com/hiroshijp/hcce-observer/domain"
 	"github.com/labstack/echo/v4"
 )
 

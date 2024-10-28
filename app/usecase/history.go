@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/hiroshijp/try-clean-arch/domain"
+	"github.com/hiroshijp/hcce-observer/domain"
 )
 
 type HistoryRepository interface {

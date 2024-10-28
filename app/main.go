@@ -7,12 +7,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/hiroshijp/try-clean-arch/domain"
-	"github.com/hiroshijp/try-clean-arch/handler"
-	"github.com/hiroshijp/try-clean-arch/handler/middleware"
-	"github.com/hiroshijp/try-clean-arch/handler/public"
-	postgresRepo "github.com/hiroshijp/try-clean-arch/repository/postgres"
-	"github.com/hiroshijp/try-clean-arch/usecase"
+	"github.com/hiroshijp/hcce-observer/domain"
+	"github.com/hiroshijp/hcce-observer/handler"
+	"github.com/hiroshijp/hcce-observer/handler/middleware"
+	"github.com/hiroshijp/hcce-observer/handler/public"
+	postgresRepo "github.com/hiroshijp/hcce-observer/repository/postgres"
+	"github.com/hiroshijp/hcce-observer/usecase"
 
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"

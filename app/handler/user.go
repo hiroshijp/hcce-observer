@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/hiroshijp/try-clean-arch/domain"
-	"github.com/hiroshijp/try-clean-arch/handler/middleware"
+	"github.com/hiroshijp/hcce-observer/domain"
+	"github.com/hiroshijp/hcce-observer/handler/middleware"
 	"github.com/labstack/echo/v4"
 )
 
